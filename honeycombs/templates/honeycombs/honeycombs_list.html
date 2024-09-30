@@ -1,0 +1,74 @@
+{% extends 'honeycombs/base.html'%}
+{% block content %}
+{% load m_filter %}
+
+
+<div class="container-fluid">
+
+    <div class="row  ">
+        <div class="col-2">
+            <img src="media/Our_Solutions.png" class="d-block mx-lg-auto img-fluid" alt="Изображение" width="700"
+                 height="500" loading="lazy">
+        </div>
+        <div class="col-2">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Цифровой улей</h1>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-4"></div>
+        <div class="col-2 ">
+            <img src="{{ user.avatar | media_filter }}" class="d-block mx-lg-auto img-fluid" alt="Аватар" width="700"
+                 height="500" loading="lazy">
+        </div>
+        <div class="col-2">
+            <h5 class="display-10 fw-bold text-body-emphasis lh-3 mb-3">{{ user.nickname }}</h5>
+            <h5 class="display-10 fw-bold text-body-emphasis lh-3 mb-3">{{ user.email }}</h5>
+            <h5 class="display-10 fw-bold text-body-emphasis lh-3 mb-3">{{ user.phone }}</h5>
+            <a href="{% url 'honeycombs:lk' %}" type="button" class="btn btn-primary btn-sm px-4 me-md-2">личный
+                кабинет</a>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container-fluid" style="background-image: url(media/fon.png);
+                background-repeat: repeat;
+                background-size: 20%;">
+            <div class="row">
+                <div class="container">
+                    <div class="row"></div>
+                </div>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for honeycomb in object_list %}
+                    <div class="col-3">
+                        <div class="card shadow-sm">
+                            <img class="card-img-top embed-responsive-item" width="250" height="200" loading="lazy"
+                                 src="{{ honeycomb.image | media_filter }}">
+                            <div class="card-body">
+                                <p class="card-text">{{ honeycomb.name }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if user.is_authenticated %}
+                                    <div class="btn-group">
+                                        <a href="{% url 'honeycombs:honeycombs_detail' honeycomb.pk %}" type="button"
+                                           class="btn btn-sm btn-block btn-outline-primary">Открыть</a>
+                                    </div>
+                                    {% if honeycomb.paid_content %}
+                                    <small class="text-body-secondary">по подписке</small>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'honeycombs/base.html'%}
+{% block content %}
+
+<form class="row" method="post" enctype="multipart/form-data">
+    <div class="conteiner">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-titel">
+                            Подписка
+                        </h3>
+                        <h5 class="card-title">
+                            {%for obj in avtor%}
+                            Для активации подписки вам необходимо произвести оплату
+                            <br>Оплата составляет {{obj.summ_subscription}} рублей
+                        </h5>
+
+                        {%endfor%}
+                        <div class="card-body">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="subscription" value="{{ subscription.pk }}">
+                            {{ form.as_p}}
+                        </div>
+                         <button type="submit" class="btn btn-primary">
+                            Подписаться
+                        </button>
+                        <a href="{% url 'honeycombs:lk' %}" class="btn btn-primary">Отмена</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>>
+
+
+{% endblock %}

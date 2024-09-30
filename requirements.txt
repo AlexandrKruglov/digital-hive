@@ -1,0 +1,7 @@
+Django==5.1.1
+pillow==10.4.0
+psycopg2-binary==2.9.9
+python-dotenv==1.0.1
+requests==2.32.3
+smsaero_api==3.0.0
+stripe==10.12.0

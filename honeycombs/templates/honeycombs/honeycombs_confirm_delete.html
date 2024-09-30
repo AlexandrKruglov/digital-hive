@@ -1,0 +1,19 @@
+{% extends 'honeycombs/base.html'%}
+{% block content %}
+<div class="conteiner">
+    <div class="row">
+        <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" >
+                        {% csrf_token %}
+                               <p> Удалить контент?"{{ honeycombs.name }}"</p>
+                               <button type="submit" class="btn btn-danger">Удалить</button>
+                               <a href="{% url 'honeycombs:honeycombs_detail' honeycombs.pk %}" class="btn btn-success">Отмена</a>
+                        </form>
+                </div>
+        </div>
+    </div>
+</div>
+    </div>
+{% endblock %}

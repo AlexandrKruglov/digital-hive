@@ -1,0 +1,99 @@
+{% extends 'honeycombs/base.html'%}
+{% block content %}
+{% load m_filter %}
+
+<div class="container background=yellow">
+
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-2">
+            <img src="/media/Our_Solutions.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
+                 height="500" loading="lazy">
+        </div>
+        <div class="col-2">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Цифровой улий</h1>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+            <svg class="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+                <use xlink:href="#bootstrap"/>
+            </svg>
+        </a>
+    </div>
+    <hr width="100%" size="2" color="blue" noshade>
+    <h5 class="display-10 fw-bold text-body-emphasis lh-3 mb-3">Автор контента</h5>
+    <div class="row"></div>
+    {% for obj in avtor %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1 ">
+                <img src="{{ obj.avatar | media_filter }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
+                     width="200" height="100" loading="lazy">
+            </div>
+
+            <div class="col-1">
+                <h5 class="display-10 fw-bold text-body-emphasis lh-3 mb-3">{{ obj.nickname }}</h5>
+                {% if user != honeycombs.owner %}
+                {% if subscription  %}
+                <a href="{% url 'subscription:subscription_delete' subscription.pk %}" type="button"
+                   class="btn btn-primary btn-sm px-4 me-md-2">
+                    удалить подписку</a>
+                {% else %}
+                <a href="{% url 'subscription:subscriptions_create' obj.pk %}" type="button"
+                   class="btn btn-primary btn-sm px-4 me-md-2">
+                    подписаться на автора</a>
+                {% endif %}
+
+                {% endif %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if honeycombs.paid_content %}
+    <h1 class="h5 ">Платный контент</h1>
+    {% if subscription or  user == object.owner %}
+    <hr width="100%" size="2" color="blue" noshade>
+    <div class="container-fluid">
+        <h1 class="display-1 text-center">{{ honeycombs.name }}</h1>
+        <center>
+            <img src="{{ honeycombs.image | media_filter }}" class="img-fluid-center" alt="..." width="700" height="400"
+                 loading="lazy">
+        </center>
+        <div class="col-12">
+             <h1 class="h5 ">{{ honeycombs.description }}</h1>
+        </div>
+    </div>
+    {% endif %}
+    {% else%}
+    <hr width="100%" size="2" color="blue" noshade>
+    <div class="container-fluid">
+        <h1 class="display-1 text-center">{{ honeycombs.name }}</h1>
+        <center>
+            <img src="{{ honeycombs.image | media_filter }}" class="img-fluid-center" alt="..." width="700" height="400"
+                 loading="lazy">
+        </center>
+        <div class="col-12">
+             <h1 class="h5 ">{{ honeycombs.description }}</h1>
+        </div>
+    </div>
+
+</div>
+
+    {% if  user == object.owner %}
+        <div class="container">
+        <div class="btn-group">
+            <a class="btn btn-primary" href="{% url 'honeycombs:update' honeycombs.pk %}" role="button">Редактировать</a>
+            <a class="btn btn-danger" href="{% url 'honeycombs:delete' honeycombs.pk %}" role="button">Удалить</a>
+        </div>
+        </div>
+    {% endif %}
+{% endif%}
+<div class="container themed-container text-center">_</div>
+
+{% endblock %}

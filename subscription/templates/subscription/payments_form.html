@@ -1,0 +1,31 @@
+<{% extends 'honeycombs/base.html'%}
+{% block content %}
+
+<form class="row" method="post" enctype="multipart/form-data">
+    <div class="conteiner">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-titel">
+                            Вы будете перенаправлены на оплату
+                        </h3>
+                        <div class="card-body">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="payment" value="{{ payment.pk }}">
+                            {{ form.as_p}}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            оплатить
+                        </button>
+                        <a href="{% url 'honeycombs:lk' %}" class="btn btn-primary">Отмена</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>>
+
+
+{% endblock %}
