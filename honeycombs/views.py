@@ -46,21 +46,22 @@ class HoneycombsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['honeycombs'] = Honeycombs.objects.all().order_by('?')[:3]
+        context_data['honeycombs'] = Honeycombs.objects.all()
         return context_data
+
 
 class HoneycombsTopicListView(ListView):
     """Страница статей по теме"""
     model = Honeycombs
 
-
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
         """Фильтр статей по теме"""
-        return Honeycombs.objects.filter(topic=self.kwargs.get('topic'))
-
+        topic_honeycombs = Honeycombs.objects.all()
+        return topic_honeycombs.filter(topic=self.kwargs.get('pk'))
 
 
 class ProfileListView(ListView):
