@@ -5,6 +5,7 @@ from config.settings import SMSAERO_EMAIL, SMSAERO_API_KEY
 
 
 def send_sms(phone: int, message: str) -> dict:
+    """Отправка смс через смс-аеро"""
     api = SmsAero(SMSAERO_EMAIL, SMSAERO_API_KEY)
     return api.send_sms(int(phone), message)
 

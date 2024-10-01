@@ -9,6 +9,7 @@ def create_products(name):
 
 
 def create_price(summ):
+    """Создаем цену подписки для страйп"""
     return stripe.Price.create(
         currency="rub",
         unit_amount=summ * 100,
@@ -17,6 +18,7 @@ def create_price(summ):
 
 
 def create_session(price):
+    """Создаем сессию оплаты и ссылку на оплату"""
     session = stripe.checkout.Session.create(
         success_url="https://localhost:8000/",
         line_items=[{"price": price.get('id'), "quantity": 1}],

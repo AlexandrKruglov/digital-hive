@@ -13,15 +13,18 @@ from users.models import User
 
 # Create your views here.
 class HoneycombsPageVeiw(TemplateView):
+    """Стартовая страница"""
     template_name = 'honeycombs/start.html'
 
 
 class HoneycombsCreateView(CreateView):
+    """Страница создания новой статьи"""
     model = Honeycombs
     form_class = HoneycombsForm
     success_url = reverse_lazy('honeycombs:lk')
 
     def form_valid(self, form):
+        """Добавляем атора"""
         honeycombs_form = form.save()
         user = self.request.user
         honeycombs_form.owner = user
@@ -30,12 +33,14 @@ class HoneycombsCreateView(CreateView):
 
 
 class HoneycombsUpdateView(UpdateView):
+    """Страница редактирования статьи"""
     model = Honeycombs
     form_class = HoneycombsForm
     success_url = reverse_lazy('honeycombs:lk')
 
 
 class HoneycombsListView(ListView):
+    """Страница всех статей"""
     model = Honeycombs
     template_name = 'honeycombs/home.html'
 
@@ -45,6 +50,7 @@ class HoneycombsListView(ListView):
         return context_data
 
 class HoneycombsTopicListView(ListView):
+    """Страница статей по теме"""
     model = Honeycombs
 
 
@@ -52,40 +58,35 @@ class HoneycombsTopicListView(ListView):
     #     return super().get(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
+        """Фильтр статей по теме"""
         return Honeycombs.objects.filter(topic=self.kwargs.get('topic'))
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     honeycombs = Honeycombs.objects.all()
-    #     honeycombs = honeycombs.filter(topic=self.kwargs.get('topic'))
-    #     print(f'22{kwargs}')
-    #     context['honeycombs'] = honeycombs
-    #     return context
+
 
 
 class ProfileListView(ListView):
+    """Список публикаций пользователя"""
     model = Honeycombs
     template_name = 'honeycombs/lk.html'
 
 
 class HoneycombsDetailView(DetailView):
+    """Просмотр конкретной статьи"""
     model = Honeycombs
 
     def get_context_data(self, **kwargs):
+        """Выводим автора статьи и есть ли подписка"""
         context = super().get_context_data(**kwargs)
         avtor = User.objects.all()
-        print(self.object.owner)
         avtor = avtor.filter(phone=self.object.owner)
         subscription = Subscription.objects.all()
-        print(avtor)
         user = self.request.user
         subscription = subscription.filter(user=user, subscribe_to_user__in=avtor)
-        print(subscription)
         context['subscription'] = subscription.first()
         context['avtor'] = avtor
-        print(context)
         return context
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    """Удаление статьи"""
     model = Honeycombs
     success_url = reverse_lazy('honeycombs:lk')

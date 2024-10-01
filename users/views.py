@@ -14,6 +14,7 @@ from users.services import send_sms
 
 
 class RegisterView(CreateView):
+    """Регистрация пользователя"""
     model = User
     form_class = UserRegisterForm
 
@@ -21,6 +22,7 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('users:token')
 
     def form_valid(self, form):
+        """Создание и отправка смс с кодом подтверждения"""
         user = form.save()
         user.is_active = False
         phone = user.phone
@@ -34,6 +36,7 @@ class RegisterView(CreateView):
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
+    """Изменения профиля пользователя"""
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy('honeycombs:lk')
@@ -43,12 +46,14 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
 
 class UserPasswordChangeView(PasswordChangeView):
+    """Смена пароля"""
     form_class = UserPasswordChangeForm
     success_url = reverse_lazy('users:password_change_done')
     template_name = 'users/password_change_form.html'
 
 
 class CheckTokenView(View):
+    """Проверка смс кода"""
     model = User
     form_class = CheckTokenForm
     template_name = 'users/token.html'

@@ -9,11 +9,10 @@ from subscription.services import create_price, create_session
 from users.models import User
 
 
-class PaymentsListView(ListView):
-    model = Payments
 
 
 class PaymentsCreateView(CreateView):
+    """Создание платежа"""
     model = Payments
     form_class = PaymentsForm
 
@@ -21,6 +20,7 @@ class PaymentsCreateView(CreateView):
         return super().get(request, *args, **kwargs)
 
     def get_pay_data(self, pk):
+        """Создание сесии и ссылки на оплате в страйп"""
         user = User.objects.all()
         user = user.filter(pk=pk).first()
         price = create_price(user.summ_subscription)
@@ -28,6 +28,7 @@ class PaymentsCreateView(CreateView):
         return session_id, link
 
     def post(self, request, *args, **kwargs):
+        """Переход по ссылке на оплату"""
         pk = kwargs['pk']
         session_id, link = self.get_pay_data(pk)
         return HttpResponseRedirect(
@@ -35,6 +36,7 @@ class PaymentsCreateView(CreateView):
 
 
 class SubscriptionsCreate(CreateView):
+    """Создание подписки"""
     model = Subscription
     form_class = SubscriptionsForm
 
@@ -43,6 +45,7 @@ class SubscriptionsCreate(CreateView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        """Передаем в шаблон автора статьи"""
         context = super().get_context_data(**kwargs)
         avtor = User.objects.all()
         avtor = avtor.filter(pk=self.kwargs.get('pk'))
@@ -50,23 +53,23 @@ class SubscriptionsCreate(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """Создание подписки пользователем на автора статьи"""
         user = self.request.user
         g = User.objects.all()
         p = kwargs['pk']
 
         subscribe_to_user = g.filter(pk=p).first()
-        subscription, created = Subscription.objects.get_or_create(user=user, subscribe_to_user=subscribe_to_user)
-        if not created:
-            subscription.delete()
-        else:
-            return redirect('subscription:payments_create', p)
+        Subscription.objects.get_or_create(user=user, subscribe_to_user=subscribe_to_user)
+
         return redirect('subscription:payments_create', p)
 
 
 class SubscriptionsListView(ListView):
+    """Список подписок пользователя"""
     model = Subscription
 
 
 class SubscriptionDeleteView(DeleteView):
+    """Удаление подписки пользователя"""
     model = Subscription
     success_url = reverse_lazy('subscription:subscription_list')
